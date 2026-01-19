@@ -6,6 +6,10 @@ pipeline {
             args '-u root'             // lets us install system deps if needed
         }
     }
+    
+    options {
+            skipDefaultCheckout()
+        }
 
     stages {
         stage('Checkout') {
