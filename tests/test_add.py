@@ -1,9 +1,8 @@
 import pytest
 
-import sys
-sys.path.append("../src")
 
-from moduleA import add
+
+from src.moduleA import add
 
 def test_add_positive_numbers():
     a = 1
