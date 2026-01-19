@@ -1,40 +1,28 @@
 
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11-slim'   // or 3.12-slim
-            args '-u root'             // lets us install system deps if needed
-        }
-    }
-    
-    options {
-            skipDefaultCheckout()
-        }
+    agent any
 
     stages {
-        stage('Checkout') {
-            steps { checkout scm }
-        }
-
-        stage('Install deps') {
+        stage('Setup Python') {
             steps {
-                sh '''
-                  pip install --upgrade pip
-                  pip install -r requirements.txt
-                '''
+                sh """
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                """
             }
         }
 
-        stage('Test') {
+        stage('Run tests') {
             steps {
-                sh 'pytest --junitxml=test-results.xml'
-            }
-            post {
-                always {
-                    junit 'test-results.xml'
-                }
+                sh """
+                    . venv/bin/activate
+                    pytest
+                """
             }
         }
     }
 }
+
 
